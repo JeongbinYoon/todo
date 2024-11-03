@@ -1,6 +1,7 @@
 const TaskFilter = ({ onChangeFilter }) => {
   return (
     <select
+      className='ml-auto h-8 text-lg'
       name='taskStatus'
       id='taskStatus'
       onChange={(e) => onChangeFilter(e.target.value)}

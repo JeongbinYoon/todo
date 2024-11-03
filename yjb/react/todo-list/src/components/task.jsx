@@ -21,9 +21,14 @@ const Task = ({ task, onDeleteTask, onChangeTask, onToggleCheck }) => {
     onToggleCheck(task.id, isDone);
   };
   return (
-    <li>
+    <li
+      className={`flex items-center h-12 px-5 text-2xl ${
+        isEdit ? 'bg-gray-100' : ''
+      }`}
+    >
       <input
         type='checkbox'
+        className='size-5 mr-3'
         onChange={(e) => handleToggleStatus(e.target.checked)}
         checked={task.isDone}
       />
@@ -32,25 +37,35 @@ const Task = ({ task, onDeleteTask, onChangeTask, onToggleCheck }) => {
           <input
             type='text'
             value={editText}
+            className={`w-full ${isEdit ? 'bg-gray-100' : ''}`}
             placeholder='edit your task'
             onChange={(e) => setEditText(e.target.value)}
           />
-          <button onClick={handleSave}>
+          <button className='ml-auto p-3' onClick={handleSave}>
             <IoSaveOutline />
           </button>
         </>
       ) : (
         <>
-          <span className={`${task.isDone ? 'line-through' : ''}`}>
+          <span
+            className={`${task.isDone ? 'line-through text-gray-400' : ''}`}
+          >
             {task.title}
           </span>
-          <button onClick={handleEdit}>
+          <button
+            className={`ml-auto p-3 ${task.isDone ? ' text-gray-400' : ''}`}
+            disabled={task.isDone}
+            onClick={handleEdit}
+          >
             <MdOutlineEdit />
           </button>
         </>
       )}
-      <button>
-        <AiOutlineDelete onClick={() => onDeleteTask(task.id)} />
+      <button
+        className={`p-3 pr-0 ${task.isDone ? ' text-gray-400' : ''}`}
+        onClick={() => onDeleteTask(task.id)}
+      >
+        <AiOutlineDelete />
       </button>
     </li>
   );

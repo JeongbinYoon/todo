@@ -1,9 +1,14 @@
 const TaskFooter = ({ tasks, onDeleteTasksAll }) => {
   return (
-    <>
-      <span>남은 Task{tasks.filter((task) => !task.isDone).length}</span>
-      <button onClick={onDeleteTasksAll}>Delete All</button>
-    </>
+    <div className='flex flex-col mt-5'>
+      <span>{tasks.filter((task) => !task.isDone).length} task remaining</span>
+      <button
+        className='w-fit ml-auto mr-auto text-red-800'
+        onClick={onDeleteTasksAll}
+      >
+        Delete All
+      </button>
+    </div>
   );
 };
 export default TaskFooter;
