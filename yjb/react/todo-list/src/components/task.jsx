@@ -3,7 +3,7 @@ import { AiOutlineDelete } from 'react-icons/ai';
 import { IoSaveOutline } from 'react-icons/io5';
 import { useState } from 'react';
 
-const Task = ({ task, onDeleteTask, onChangeTask, onToggleStatus }) => {
+const Task = ({ task, onDeleteTask, onChangeTask, onToggleCheck }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [editText, setEditText] = useState('');
 
@@ -18,13 +18,14 @@ const Task = ({ task, onDeleteTask, onChangeTask, onToggleStatus }) => {
   };
 
   const handleToggleStatus = (isDone) => {
-    onToggleStatus(task.id, isDone);
+    onToggleCheck(task.id, isDone);
   };
   return (
     <li>
       <input
         type='checkbox'
         onChange={(e) => handleToggleStatus(e.target.checked)}
+        checked={task.isDone}
       />
       {isEdit ? (
         <>

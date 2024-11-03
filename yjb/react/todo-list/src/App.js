@@ -1,47 +1,82 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { v4 as uuid4 } from 'uuid';
 import './App.css';
 import TaskInput from './components/task-input';
 import Tasks from './components/tasks';
+import TaskFooter from './components/task-footer';
+import TaskFilter from './components/task-filter';
 
 function App() {
   const [tasks, setTasks] = useState([]);
+  const [filteredTasks, setFilteredTasks] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState('all');
 
   const onAddtasks = (text) => {
     const task = { title: text, id: uuid4(), isDone: false };
-    setTasks([task, ...tasks]);
+    handleSetTasks([task, ...tasks]);
   };
   const onDeleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id));
+    handleSetTasks(tasks.filter((task) => task.id !== id));
   };
+  const onDeleteTasksAll = () => setTasks([]);
+
   const onChangeTask = (id, title) => {
-    setTasks((tasks) =>
+    handleSetTasks(
       tasks.map((task) => (task.id === id ? { ...task, title } : task))
     );
   };
-  const onToggleStatus = (id, isDone) => {
-    setTasks((prevTasks) => {
-      const updatedTasks = prevTasks.filter((task) => task.id !== id);
-      const updatedTask = {
-        ...prevTasks.find((task) => task.id === id),
-        isDone,
+  const onToggleCheck = (id, isDone) => {
+    // 완료 항목은 뒤로, 해제 항목은 앞으로
+    const updatedTasks = tasks.filter((task) => task.id !== id);
+    const updatedTask = {
+      ...tasks.find((task) => task.id === id),
+      isDone,
+    };
+    handleSetTasks(
+      isDone ? [...updatedTasks, updatedTask] : [updatedTask, ...updatedTasks]
+    );
+  };
+
+  const onChangeFilter = (status) => setSelectedStatus(status);
+
+  const handleSetTasks = useCallback(
+    (items = tasks) => {
+      // 필터 변경된 경우 변경될 tasks 파라미터 없음. 기존 tasks 참조
+      const targetTasks = items.length > 0 ? items : tasks;
+      setTasks(targetTasks);
+
+      const statusObj = {
+        all: 'all',
+        active: false,
+        complete: true,
       };
 
-      return isDone
-        ? [...updatedTasks, updatedTask]
-        : [updatedTask, ...updatedTasks];
-    });
-  };
+      const status = statusObj[selectedStatus];
+      const newTasks = targetTasks.filter((task) =>
+        status === 'all' ? tasks : task.isDone === status
+      );
+
+      setFilteredTasks(newTasks);
+    },
+    [tasks, selectedStatus]
+  );
+
+  useEffect(() => {
+    handleSetTasks();
+  }, [selectedStatus, handleSetTasks]);
+
   return (
     <div className='App'>
       <div className='task-area'>
+        <TaskFilter onChangeFilter={onChangeFilter} />
         <TaskInput onAddtasks={onAddtasks} />
         <Tasks
-          tasks={tasks}
+          tasks={filteredTasks}
           onDeleteTask={onDeleteTask}
           onChangeTask={onChangeTask}
-          onToggleStatus={onToggleStatus}
+          onToggleCheck={onToggleCheck}
         />
+        <TaskFooter tasks={tasks} onDeleteTasksAll={onDeleteTasksAll} />
       </div>
     </div>
   );
