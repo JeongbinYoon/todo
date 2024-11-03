@@ -1,21 +1,33 @@
 import { useState } from 'react';
 import { v4 as uuid4 } from 'uuid';
 import './App.css';
-import TodoInput from './components/todo-input';
-import TodoList from './components/todo-list';
+import TaskInput from './components/task-input';
+import Tasks from './components/tasks';
 
 function App() {
-  const [todos, setTodos] = useState([]);
-  const handleSetTodos = (text) => {
+  const [tasks, setTasks] = useState([]);
+
+  const onAddtasks = (text) => {
     const task = { title: text, id: uuid4() };
-    console.log(task);
-    setTodos([...todos, task]);
+    setTasks([...tasks, task]);
+  };
+  const onDeleteTask = (id) => {
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
+  const onChangeTask = (id, title) => {
+    setTasks((tasks) =>
+      tasks.map((task) => (task.id === id ? { ...task, title } : task))
+    );
   };
   return (
     <div className='App'>
-      <div className='todo-area'>
-        <TodoInput handleSetTodos={handleSetTodos} />
-        <TodoList todos={todos} />
+      <div className='task-area'>
+        <TaskInput onAddtasks={onAddtasks} />
+        <Tasks
+          tasks={tasks}
+          onDeleteTask={onDeleteTask}
+          onChangeTask={onChangeTask}
+        />
       </div>
     </div>
   );

@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { FaPlus } from 'react-icons/fa6';
 
-const TodoInput = ({ handleSetTodos }) => {
+const TaskInput = ({ onAddtasks }) => {
   const [title, setTitle] = useState();
   const onSubmit = () => {
-    handleSetTodos(title);
+    onAddtasks(title);
     setTitle('');
   };
   return (
@@ -21,4 +21,4 @@ const TodoInput = ({ handleSetTodos }) => {
     </>
   );
 };
-export default TodoInput;
+export default TaskInput;
