@@ -2,7 +2,8 @@ import { MdOutlineEdit } from 'react-icons/md';
 import { AiOutlineDelete } from 'react-icons/ai';
 import { IoSaveOutline } from 'react-icons/io5';
 import { useState } from 'react';
-const Task = ({ task, onDeleteTask, onChangeTask }) => {
+
+const Task = ({ task, onDeleteTask, onChangeTask, onToggleStatus }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [editText, setEditText] = useState('');
 
@@ -15,9 +16,16 @@ const Task = ({ task, onDeleteTask, onChangeTask }) => {
     setIsEdit(false);
     onChangeTask(task.id, editText);
   };
+
+  const handleToggleStatus = (isDone) => {
+    onToggleStatus(task.id, isDone);
+  };
   return (
     <li>
-      <input type='checkbox' />
+      <input
+        type='checkbox'
+        onChange={(e) => handleToggleStatus(e.target.checked)}
+      />
       {isEdit ? (
         <>
           <input
@@ -32,7 +40,9 @@ const Task = ({ task, onDeleteTask, onChangeTask }) => {
         </>
       ) : (
         <>
-          <span>{task.title}</span>
+          <span className={`${task.isDone ? 'line-through' : ''}`}>
+            {task.title}
+          </span>
           <button onClick={handleEdit}>
             <MdOutlineEdit />
           </button>
