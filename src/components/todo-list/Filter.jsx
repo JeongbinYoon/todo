@@ -1,4 +1,4 @@
-const TaskFilter = ({ onChangeFilter }) => {
+const Filter = ({ onChangeFilter }) => {
   return (
     <select
       className='ml-auto h-8 text-lg'
@@ -12,4 +12,4 @@ const TaskFilter = ({ onChangeFilter }) => {
     </select>
   );
 };
-export default TaskFilter;
+export default Filter;

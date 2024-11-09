@@ -1,4 +1,4 @@
-import Task from './task';
+import Task from './Task';
 
 const Tasks = ({ tasks, onDeleteTask, onChangeTask, onToggleCheck }) => {
   return (

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FaPlus } from 'react-icons/fa6';
 
-const TaskInput = ({ onAddtasks }) => {
+const Input = ({ onAddtasks }) => {
   const [title, setTitle] = useState('');
   const onSubmit = () => {
     if (!title) return;
@@ -24,4 +24,4 @@ const TaskInput = ({ onAddtasks }) => {
     </div>
   );
 };
-export default TaskInput;
+export default Input;

@@ -1,4 +1,4 @@
-const TaskFooter = ({ tasks, onDeleteTasksAll }) => {
+const Footer = ({ tasks, onDeleteTasksAll }) => {
   return (
     <div className='flex flex-col mt-5'>
       <span>{tasks.filter((task) => !task.isDone).length} task remaining</span>
@@ -11,4 +11,4 @@ const TaskFooter = ({ tasks, onDeleteTasksAll }) => {
     </div>
   );
 };
-export default TaskFooter;
+export default Footer;
