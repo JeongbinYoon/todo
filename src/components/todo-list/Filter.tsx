@@ -1,12 +1,14 @@
-import { FilterProps } from '../../types';
+import { useSetAtom } from 'jotai';
+import { filterAtom } from '../../store/taskAtom';
 
-const Filter = ({ onChangeFilter }: FilterProps) => {
+const Filter = () => {
+  const setFilterVal = useSetAtom(filterAtom);
   return (
     <select
       className='ml-auto h-8 text-lg'
       name='taskStatus'
       id='taskStatus'
-      onChange={(e) => onChangeFilter(e.target.value)}
+      onChange={(e) => setFilterVal(e.target.value)}
     >
       <option value='all'>All</option>
       <option value='active'>Active</option>

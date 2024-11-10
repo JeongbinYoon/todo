@@ -3,29 +3,46 @@ import { AiOutlineDelete } from 'react-icons/ai';
 import { IoSaveOutline } from 'react-icons/io5';
 import { useState } from 'react';
 import { TaskProps } from '../../types';
+import { useAtom } from 'jotai';
+import { tasksAtom } from '../../store/taskAtom';
 
-const Task = ({
-  task,
-  onDeleteTask,
-  onChangeTask,
-  onToggleCheck,
-}: TaskProps) => {
+const Task = ({ task }: TaskProps) => {
+  const [tasks, setTasks] = useAtom(tasksAtom);
   const [isEdit, setIsEdit] = useState(false);
   const [editText, setEditText] = useState('');
 
-  const handleEdit = () => {
+  const onToggleCheck = (id: string, isDone: boolean) => {
+    // 완료 항목은 뒤로, 해제 항목은 앞으로
+    const updatedTasks = tasks.filter((task) => task.id !== id);
+    const targetTask = tasks.find((task) => task.id === id);
+
+    if (targetTask) {
+      const updatedTask = { ...targetTask, isDone };
+      setTasks(
+        isDone ? [...updatedTasks, updatedTask] : [updatedTask, ...updatedTasks]
+      );
+    }
+  };
+
+  const handleEditTask = () => {
     setIsEdit(true);
     setEditText(task.title);
   };
 
   const handleSave = () => {
     setIsEdit(false);
-    onChangeTask(task.id, editText);
+    changeTask(task.id, editText);
   };
 
-  const handleToggleStatus = (isDone: boolean) => {
-    onToggleCheck(task.id, isDone);
+  const changeTask = (id: string, title: string) => {
+    setTasks(tasks.map((task) => (task.id === id ? { ...task, title } : task)));
   };
+
+  const deleteTask = (id: string) => {
+    const remainTasks = tasks.filter((task) => task.id !== id);
+    setTasks(remainTasks);
+  };
+
   return (
     <li
       className={`flex items-center h-12 px-5 text-2xl ${
@@ -35,7 +52,7 @@ const Task = ({
       <input
         type='checkbox'
         className='size-5 mr-3'
-        onChange={(e) => handleToggleStatus(e.target.checked)}
+        onChange={(e) => onToggleCheck(task.id, e.target.checked)}
         checked={task.isDone}
       />
       {isEdit ? (
@@ -61,7 +78,7 @@ const Task = ({
           <button
             className={`ml-auto p-3 ${task.isDone ? ' text-gray-400' : ''}`}
             disabled={task.isDone}
-            onClick={handleEdit}
+            onClick={handleEditTask}
           >
             <MdOutlineEdit />
           </button>
@@ -69,7 +86,7 @@ const Task = ({
       )}
       <button
         className={`p-3 pr-0 ${task.isDone ? ' text-gray-400' : ''}`}
-        onClick={() => onDeleteTask(task.id)}
+        onClick={() => deleteTask(task.id)}
       >
         <AiOutlineDelete />
       </button>

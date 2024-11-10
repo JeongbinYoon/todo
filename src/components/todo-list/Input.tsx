@@ -1,13 +1,22 @@
+import { v4 as uuid4 } from 'uuid';
 import { useState } from 'react';
 import { FaPlus } from 'react-icons/fa6';
-import { InputProps } from '../../types';
+import { useAtom } from 'jotai';
+import { tasksAtom } from '../../store/taskAtom';
 
-const Input = ({ onAddtasks }: InputProps) => {
+const Input = () => {
   const [title, setTitle] = useState('');
+  const [tasks, setTasks] = useAtom(tasksAtom);
+
   const onSubmit = () => {
     if (!title) return;
-    onAddtasks(title);
+    addTask(title);
     setTitle('');
+  };
+
+  const addTask = (text: string) => {
+    const task = { title: text, id: uuid4(), isDone: false };
+    setTasks([task, ...tasks]);
   };
 
   return (
