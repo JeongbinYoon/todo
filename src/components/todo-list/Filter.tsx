@@ -1,4 +1,6 @@
-const Filter = ({ onChangeFilter }) => {
+import { FilterProps } from '../../types';
+
+const Filter = ({ onChangeFilter }: FilterProps) => {
   return (
     <select
       className='ml-auto h-8 text-lg'

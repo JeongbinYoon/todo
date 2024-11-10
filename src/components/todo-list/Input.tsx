@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { FaPlus } from 'react-icons/fa6';
+import { InputProps } from '../../types';
 
-const Input = ({ onAddtasks }) => {
+const Input = ({ onAddtasks }: InputProps) => {
   const [title, setTitle] = useState('');
   const onSubmit = () => {
     if (!title) return;

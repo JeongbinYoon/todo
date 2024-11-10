@@ -1,6 +1,12 @@
+import { TasksProps } from '../../types';
 import Task from './Task';
 
-const Tasks = ({ tasks, onDeleteTask, onChangeTask, onToggleCheck }) => {
+const Tasks = ({
+  tasks,
+  onDeleteTask,
+  onChangeTask,
+  onToggleCheck,
+}: TasksProps) => {
   return (
     <ul>
       {tasks.map((task) => (

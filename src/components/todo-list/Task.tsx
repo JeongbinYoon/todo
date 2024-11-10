@@ -2,8 +2,14 @@ import { MdOutlineEdit } from 'react-icons/md';
 import { AiOutlineDelete } from 'react-icons/ai';
 import { IoSaveOutline } from 'react-icons/io5';
 import { useState } from 'react';
+import { TaskProps } from '../../types';
 
-const Task = ({ task, onDeleteTask, onChangeTask, onToggleCheck }) => {
+const Task = ({
+  task,
+  onDeleteTask,
+  onChangeTask,
+  onToggleCheck,
+}: TaskProps) => {
   const [isEdit, setIsEdit] = useState(false);
   const [editText, setEditText] = useState('');
 
@@ -17,7 +23,7 @@ const Task = ({ task, onDeleteTask, onChangeTask, onToggleCheck }) => {
     onChangeTask(task.id, editText);
   };
 
-  const handleToggleStatus = (isDone) => {
+  const handleToggleStatus = (isDone: boolean) => {
     onToggleCheck(task.id, isDone);
   };
   return (

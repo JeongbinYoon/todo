@@ -1,43 +1,46 @@
 import { useCallback, useEffect, useState } from 'react';
 import { v4 as uuid4 } from 'uuid';
 import Tasks from './Tasks';
-import Footer from './Footer';
 import Input from './Input';
+import Footer from './Footer';
 import Filter from './Filter';
+import { Task } from '../../types';
 
 function TodoList() {
-  const [tasks, setTasks] = useState([]);
-  const [filteredTasks, setFilteredTasks] = useState([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
   const [selectedStatus, setSelectedStatus] = useState('all');
 
-  const onAddtasks = (text) => {
+  const onAddtasks = (text: string) => {
     const task = { title: text, id: uuid4(), isDone: false };
     handleSetTasks([task, ...tasks]);
   };
-  const onDeleteTask = (id) => {
+  const onDeleteTask = (id: string) => {
     const remainTasks = tasks.filter((task) => task.id !== id);
     remainTasks.length ? handleSetTasks(remainTasks) : setTasks([]);
   };
   const onDeleteTasksAll = () => setTasks([]);
 
-  const onChangeTask = (id, title) => {
+  const onChangeTask = (id: string, title: string) => {
     handleSetTasks(
       tasks.map((task) => (task.id === id ? { ...task, title } : task))
     );
   };
-  const onToggleCheck = (id, isDone) => {
+
+  const onToggleCheck = (id: string, isDone: boolean) => {
     // 완료 항목은 뒤로, 해제 항목은 앞으로
     const updatedTasks = tasks.filter((task) => task.id !== id);
-    const updatedTask = {
-      ...tasks.find((task) => task.id === id),
-      isDone,
-    };
-    handleSetTasks(
-      isDone ? [...updatedTasks, updatedTask] : [updatedTask, ...updatedTasks]
-    );
+    const targetTask = tasks.find((task) => task.id === id);
+
+    if (targetTask) {
+      const updatedTask = { ...targetTask, isDone };
+      handleSetTasks(
+        isDone ? [...updatedTasks, updatedTask] : [updatedTask, ...updatedTasks]
+      );
+    }
   };
 
-  const onChangeFilter = (status) => setSelectedStatus(status);
+  const onChangeFilter = (status: string) => setSelectedStatus(status);
 
   const handleSetTasks = useCallback(
     (items = tasks) => {
@@ -51,7 +54,7 @@ function TodoList() {
         complete: true,
       };
 
-      const status = statusObj[selectedStatus];
+      const status = statusObj[selectedStatus as keyof typeof statusObj];
       const newTasks = targetTasks.filter((task) =>
         status === 'all' ? tasks : task.isDone === status
       );
