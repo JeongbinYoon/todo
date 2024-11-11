@@ -1,7 +1,5 @@
-import { MdOutlineEdit } from 'react-icons/md';
-import { AiOutlineDelete } from 'react-icons/ai';
-import { IoSaveOutline } from 'react-icons/io5';
-import { useState } from 'react';
+import { CiCircleMinus } from 'react-icons/ci';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { TaskProps } from '../../types';
 import { useAtom } from 'jotai';
 import { tasksAtom } from '../../store/taskAtom';
@@ -10,6 +8,8 @@ const Task = ({ task }: TaskProps) => {
   const [tasks, setTasks] = useAtom(tasksAtom);
   const [isEdit, setIsEdit] = useState(false);
   const [editText, setEditText] = useState('');
+  const taskRef = useRef<HTMLLIElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const onToggleCheck = (id: string, isDone: boolean) => {
     // 완료 항목은 뒤로, 해제 항목은 앞으로
@@ -27,68 +27,82 @@ const Task = ({ task }: TaskProps) => {
   const handleEditTask = () => {
     setIsEdit(true);
     setEditText(task.title);
+    setTimeout(() => inputRef.current?.focus(), 0); // 편집 시  input focus
   };
 
-  const handleSave = () => {
-    setIsEdit(false);
-    changeTask(task.id, editText);
-  };
+  const changeTask = useCallback(
+    (id: string, title: string) => {
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => (task.id === id ? { ...task, title } : task))
+      );
+    },
+    [setTasks]
+  );
 
-  const changeTask = (id: string, title: string) => {
-    setTasks(tasks.map((task) => (task.id === id ? { ...task, title } : task)));
-  };
+  const handleSave = useCallback(() => {
+    if (isEdit) {
+      setIsEdit(false);
+      changeTask(task.id, editText);
+    }
+  }, [editText, changeTask, task.id, isEdit]);
 
   const deleteTask = (id: string) => {
     const remainTasks = tasks.filter((task) => task.id !== id);
     setTasks(remainTasks);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        isEdit &&
+        taskRef.current &&
+        !taskRef.current.contains(event.target as Node)
+      ) {
+        handleSave();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [handleSave, isEdit]);
   return (
     <li
-      className={`flex items-center h-12 px-5 text-2xl ${
+      ref={taskRef}
+      className={`flex items-center h-12 text-2xl ${
         isEdit ? 'bg-gray-100' : ''
       }`}
     >
       <input
         type='checkbox'
-        className='size-5 mr-3'
+        className='min-w-5 min-h-5 mr-3'
         onChange={(e) => onToggleCheck(task.id, e.target.checked)}
         checked={task.isDone}
       />
       {isEdit ? (
-        <>
-          <input
-            type='text'
-            value={editText}
-            className={`w-full ${isEdit ? 'bg-gray-100' : ''}`}
-            placeholder='edit your task'
-            onChange={(e) => setEditText(e.target.value)}
-          />
-          <button className='ml-auto p-3' onClick={handleSave}>
-            <IoSaveOutline />
-          </button>
-        </>
+        <input
+          ref={inputRef}
+          type='text'
+          value={editText}
+          className={`w-full ${isEdit ? 'bg-gray-100' : ''}`}
+          placeholder='edit your task'
+          onChange={(e) => setEditText(e.target.value)}
+        />
       ) : (
-        <>
-          <span
-            className={`${task.isDone ? 'line-through text-gray-400' : ''}`}
-          >
-            {task.title}
-          </span>
-          <button
-            className={`ml-auto p-3 ${task.isDone ? ' text-gray-400' : ''}`}
-            disabled={task.isDone}
-            onClick={handleEditTask}
-          >
-            <MdOutlineEdit />
-          </button>
-        </>
+        <span
+          className={`w-full ${
+            task.isDone ? 'line-through text-gray-400' : ''
+          } overflow-x-scroll`}
+          onClick={handleEditTask}
+        >
+          {task.title}
+        </span>
       )}
       <button
-        className={`p-3 pr-0 ${task.isDone ? ' text-gray-400' : ''}`}
+        className={`p-3 pr-0 ml-auto ${task.isDone ? ' text-gray-400' : ''}`}
         onClick={() => deleteTask(task.id)}
       >
-        <AiOutlineDelete />
+        <CiCircleMinus />
       </button>
     </li>
   );
