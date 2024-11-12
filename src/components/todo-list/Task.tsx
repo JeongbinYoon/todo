@@ -42,7 +42,8 @@ const Task = ({ task }: TaskProps) => {
   const handleSave = useCallback(() => {
     if (isEdit) {
       setIsEdit(false);
-      changeTask(task.id, editText);
+      if (!editText.trim()) return;
+      changeTask(task.id, editText.trim());
     }
   }, [editText, changeTask, task.id, isEdit]);
 
@@ -69,7 +70,7 @@ const Task = ({ task }: TaskProps) => {
   return (
     <li
       ref={taskRef}
-      className={`flex items-center h-12 text-2xl ${
+      className={`flex items-center min-h-12 text-2xl ${
         isEdit ? 'bg-gray-100' : ''
       }`}
     >
@@ -92,7 +93,7 @@ const Task = ({ task }: TaskProps) => {
         <span
           className={`w-full ${
             task.isDone ? 'line-through text-gray-400' : ''
-          } overflow-x-scroll`}
+          }`}
           onClick={handleEditTask}
         >
           {task.title}

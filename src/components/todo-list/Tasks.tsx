@@ -12,7 +12,7 @@ const Tasks = () => {
   );
 
   return (
-    <ul>
+    <ul className='max-h-96 overflow-scroll'>
       {filteredTasks.map((task) => (
         <Task key={task.id} task={task} />
       ))}
