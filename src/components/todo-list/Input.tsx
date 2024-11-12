@@ -8,7 +8,7 @@ import { tasksAtom } from '../../store/taskAtom';
 const Input = () => {
   const [title, setTitle] = useState('');
   const [tasks, setTasks] = useAtom(tasksAtom);
-  const [error, setError] = useState('Please enter a task');
+  const [error, setError] = useState('');
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
