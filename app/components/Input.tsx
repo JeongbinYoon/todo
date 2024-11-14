@@ -1,9 +1,10 @@
+'use client';
+
 import { v4 as uuid4 } from 'uuid';
 import { useEffect, useState } from 'react';
 import { IoIosAddCircle } from 'react-icons/io';
-
 import { useAtom } from 'jotai';
-import { tasksAtom } from '../../store/taskAtom';
+import { tasksAtom } from '@/store/taskAtom';
 
 const Input = () => {
   const [title, setTitle] = useState('');
@@ -21,7 +22,7 @@ const Input = () => {
   };
 
   useEffect(() => {
-    title && setError('');
+    if (title) setError('');
   }, [title]);
 
   return (

@@ -1,8 +1,8 @@
 import { CiCircleMinus } from 'react-icons/ci';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { TaskProps } from '../../types';
 import { useAtom } from 'jotai';
-import { tasksAtom } from '../../store/taskAtom';
+import { TaskProps } from '@/types';
+import { tasksAtom } from '@/store/taskAtom';
 
 const Task = ({ task }: TaskProps) => {
   const [tasks, setTasks] = useAtom(tasksAtom);

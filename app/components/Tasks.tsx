@@ -1,6 +1,8 @@
+'use client';
+
 import { useAtom } from 'jotai';
 import Task from './Task';
-import { filterAtom, tasksAtom } from '../../store/taskAtom';
+import { filterAtom, tasksAtom } from '@/store/taskAtom';
 
 const Tasks = () => {
   const [tasks] = useAtom(tasksAtom);

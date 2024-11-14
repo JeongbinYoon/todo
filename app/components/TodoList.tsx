@@ -1,7 +1,7 @@
-import Tasks from './Tasks';
-import Input from './Input';
-import Footer from './Footer';
-import Filter from './Filter';
+import Filter from '@/app/components/Filter';
+import Footer from '@/app/components/Footer';
+import Input from '@/app/components/Input';
+import Tasks from '@/app/components/Tasks';
 
 function TodoList() {
   return (
