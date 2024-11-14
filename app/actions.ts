@@ -13,3 +13,24 @@ export const createTask = async (title: string) => {
     data: { title, isDone: false },
   });
 };
+
+export const updateTask = async ({
+  id,
+  title,
+  isDone,
+}: {
+  id: number;
+  title?: string;
+  isDone?: boolean;
+}) => {
+  return await prisma.todo.update({
+    where: { id },
+    data: { title, isDone },
+  });
+};
+
+export const deleteTask = async (id: number) => {
+  return await prisma.todo.delete({
+    where: { id },
+  });
+};
