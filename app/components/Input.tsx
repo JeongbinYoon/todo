@@ -1,23 +1,34 @@
 'use client';
 
-import { v4 as uuid4 } from 'uuid';
 import { useEffect, useState } from 'react';
 import { IoIosAddCircle } from 'react-icons/io';
-import { useAtom } from 'jotai';
-import { tasksAtom } from '@/store/taskAtom';
+import { createTask } from '@/app/actions';
+import { useMutation, useQueryClient } from 'react-query';
 
 const Input = () => {
   const [title, setTitle] = useState('');
-  const [tasks, setTasks] = useAtom(tasksAtom);
   const [error, setError] = useState('');
 
-  const submit = (e: React.FormEvent) => {
+  // App.tsx에서 Provider로 설정했으니 또 인스턴스 만들지 않음
+  const queryClient = useQueryClient();
+  const mutation = useMutation(createTask, {
+    onSuccess: () => {
+      /*
+       * invalidateQueries:
+       * 캐시된 데이터 무효화하여 해당 데이터 새로고침 (주로 데이터 변경되었을 때 사용)
+       */
+      queryClient.invalidateQueries('tasks');
+    },
+  });
+
+  const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) {
       setError('Please enter a task');
       return;
     }
-    setTasks([{ title, id: uuid4(), isDone: false }, ...tasks]);
+
+    mutation.mutate(title);
     setTitle('');
   };
 
@@ -26,7 +37,7 @@ const Input = () => {
   }, [title]);
 
   return (
-    <form onSubmit={submit} className='flex flex-col my-3'>
+    <form onSubmit={handleCreate} className='flex flex-col my-3'>
       <div className='flex'>
         <input
           type='text'
@@ -36,7 +47,7 @@ const Input = () => {
           onChange={(e) => setTitle(e.target.value)}
         />
         {title && (
-          <button className='p-3 pr-0 text-2xl' onClick={submit}>
+          <button className='p-3 pr-0 text-2xl' onClick={handleCreate}>
             <IoIosAddCircle />
           </button>
         )}
