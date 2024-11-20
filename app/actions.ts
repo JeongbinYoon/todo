@@ -34,6 +34,13 @@ export const updateTask = async ({ id, title, isDone }: UpdateParams) => {
 };
 
 export const deleteTask = async (id: number) => {
+  const task = await prisma.todo.findUnique({
+    where: {
+      id,
+    },
+  });
+  if (!task) return;
+
   return await prisma.todo.delete({
     where: { id },
   });
