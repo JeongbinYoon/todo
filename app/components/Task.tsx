@@ -8,6 +8,7 @@ import { deleteTask, updateTask } from '@/app/actions';
 const Task = ({ task }: TaskProps) => {
   const [isEdit, setIsEdit] = useState(false);
   const [editText, setEditText] = useState('');
+  const [isHover, setIsHover] = useState(false);
   const taskRef = useRef<HTMLLIElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -58,41 +59,54 @@ const Task = ({ task }: TaskProps) => {
   return (
     <li
       ref={taskRef}
-      className={`flex items-center min-h-12 text-2xl ${
-        isEdit ? 'bg-gray-100' : ''
+      className={`flex items-start px-4 py-2 text-2xl mt-4 cursor-pointer rounded-md transition-colors duration-300 ${
+        isEdit ? 'bg-gray-100' : 'hover:bg-gray-100'
       }`}
+      onMouseOver={() => setIsHover(true)}
+      onMouseLeave={() => setIsHover(false)}
     >
+      {/* checkbox */}
       <input
         type='checkbox'
-        className='min-w-5 min-h-5 mr-3'
+        className='min-w-5 min-h-5 mr-3 mt-1.5'
         onChange={(e) => onToggleCheck(e.target.checked)}
         checked={task.isDone}
       />
       {isEdit ? (
+        // 수정 중 O
         <input
           ref={inputRef}
           type='text'
           value={editText}
-          className={`w-full ${isEdit ? 'bg-gray-100' : ''}`}
+          className={`w-full ${isEdit && 'bg-gray-100'}`}
           placeholder='edit your task'
           onChange={(e) => setEditText(e.target.value)}
         />
       ) : (
+        // 수정 중 X
         <span
-          className={`w-full ${
-            task.isDone ? 'line-through text-gray-400' : ''
-          }`}
+          className={`w-full ${task.isDone && 'line-through text-gray-400'}`}
           onClick={handleEditTask}
         >
           {task.title}
         </span>
       )}
-      <button
-        className='p-3 pr-0 ml-auto'
-        onClick={() => handleDelete(task.id)}
-      >
-        <CiCircleMinus />
-      </button>
+
+      {/* 삭제 버튼 */}
+      {!isEdit && (
+        <button
+          className={`mt-1 ml-auto transition-all duration-200
+          ${
+            isHover
+              ? 'opacity-100 visibility-visible pointer-events-auto'
+              : 'opacity-0 visibility-hidden pointer-events-none'
+          }
+        `}
+          onClick={() => handleDelete(task.id)}
+        >
+          <CiCircleMinus />
+        </button>
+      )}
     </li>
   );
 };
