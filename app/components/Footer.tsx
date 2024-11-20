@@ -1,16 +1,24 @@
 'use client';
 
-import { tasksAtom } from '@/store/taskAtom';
-import { useAtom } from 'jotai';
+import { deleteAllTasks, fetchTasks } from '@/app/actions';
+import { Task } from '@/types';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 const Footer = () => {
-  const [tasks, setTaks] = useAtom(tasksAtom);
+  const { data: tasks = [] } = useQuery<Task[]>('tasks', () => fetchTasks());
+  const queryClient = useQueryClient();
+  const deleteMutation = useMutation(deleteAllTasks, {
+    onSuccess: () => queryClient.invalidateQueries('tasks'),
+  });
+  const handleDeleteAll = () => {
+    deleteMutation.mutate();
+  };
   return (
     <div className='flex flex-col gap-2 mt-5'>
       <span>{tasks.filter((task) => !task.isDone).length} tasks remaining</span>
       <button
         className='w-fit ml-auto mr-auto text-red-800'
-        onClick={() => setTaks([])}
+        onClick={handleDeleteAll}
       >
         Delete All
       </button>

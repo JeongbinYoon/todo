@@ -36,3 +36,7 @@ export const deleteTask = async (id: number) => {
     where: { id },
   });
 };
+
+export const deleteAllTasks = async () => {
+  return await prisma.todo.deleteMany();
+};
