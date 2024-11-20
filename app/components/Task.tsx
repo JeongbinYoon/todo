@@ -88,7 +88,7 @@ const Task = ({ task }: TaskProps) => {
         </span>
       )}
       <button
-        className={`p-3 pr-0 ml-auto ${task.isDone ? ' text-gray-400' : ''}`}
+        className='p-3 pr-0 ml-auto'
         onClick={() => handleDelete(task.id)}
       >
         <CiCircleMinus />

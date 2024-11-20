@@ -1,15 +1,17 @@
 'use server';
 
+import { Task } from '@/types';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const fetchTasks = async (filterVal: string) => {
-  if (filterVal === 'all') return await prisma.todo.findMany();
-  else
-    return await prisma.todo.findMany({
-      where: { isDone: filterVal === 'complete' },
-    });
+export const fetchTasks = async (filterVal?: string): Promise<Task[]> => {
+  return await prisma.todo.findMany({
+    where: filterVal === 'all' ? {} : { isDone: filterVal === 'complete' },
+    orderBy: {
+      id: 'desc',
+    },
+  });
 };
 
 export const createTask = async (title: string) => {
