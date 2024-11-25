@@ -1,7 +1,7 @@
-import Filter from '@/app/components/Filter';
-import Footer from '@/app/components/Footer';
-import Input from '@/app/components/Input';
-import Tasks from '@/app/components/Tasks';
+import Filter from '@/app/components/todo/Filter';
+import Input from '@/app/components/todo/Input';
+import Tasks from '@/app/components/todo/Tasks';
+import Footer from '@/app/components/todo/Footer';
 import { selectedDateAtom } from '@/store/calendarAtom';
 import { useAtomValue } from 'jotai';
 

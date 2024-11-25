@@ -1,7 +1,7 @@
 'use client';
 
 import Calendar from '@/app/components/calendar/Calendar';
-import TodoList from '@/app/components/TodoList';
+import TodoList from '@/app/components/todo/TodoList';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 export default function Home() {
