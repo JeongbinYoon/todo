@@ -17,7 +17,7 @@ const Tasks = () => {
     isLoading,
   } = useQuery(
     ['tasks', filterVal, selectedDate],
-    () => fetchTasks(filterVal, selectedDate),
+    () => fetchTasks({ filterVal, selectedDate }),
     {
       enabled: !!filterVal && !!selectedDate,
       onSuccess: () => {

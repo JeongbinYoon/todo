@@ -1,5 +1,5 @@
 import { atom } from 'jotai';
-import { Task } from '../types';
+import { FilterVal, Task } from '../types';
 
 export const tasksAtom = atom<Task[]>([]);
-export const filterAtom = atom('all');
+export const filterAtom = atom<FilterVal>('all');

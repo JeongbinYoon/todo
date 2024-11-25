@@ -1,8 +1,7 @@
 import { fetchTasksForMonth } from '@/app/actions';
 import useCalendar from '@/hooks/useCalendar';
 import { selectedDateAtom } from '@/store/calendarAtom';
-import { tasksAtom } from '@/store/taskAtom';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import { useCallback, useEffect } from 'react';
 import { useQuery } from 'react-query';
 
@@ -37,7 +36,7 @@ const Calendar = () => {
   useQuery(
     ['tasksForMonth', currentMonth, startDate, endDate],
     async () => {
-      return await fetchTasksForMonth(startDate, endDate);
+      return await fetchTasksForMonth({ startDate, endDate });
     },
     {
       enabled: !!currentMonth,

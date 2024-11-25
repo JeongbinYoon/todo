@@ -1,15 +1,21 @@
 'use server';
 
-import { Task } from '@/types';
+import {
+  CreateParams,
+  FetchTasksForMonthParams,
+  FetchTasksParams,
+  Task,
+  UpdateParams,
+} from '@/types';
 import { PrismaClient } from '@prisma/client';
 import { endOfDay, startOfDay } from 'date-fns';
 
 const prisma = new PrismaClient();
 
-export const fetchTasks = async (
-  filterVal?: string,
-  selectedDate?: string
-): Promise<Task[]> => {
+export const fetchTasks = async ({
+  filterVal,
+  selectedDate,
+}: FetchTasksParams): Promise<Task[]> => {
   return await prisma.todo.findMany({
     where: {
       ...(filterVal === 'all' ? {} : { isDone: filterVal === 'complete' }), // filterVal에 따른 필터링
@@ -27,16 +33,16 @@ export const fetchTasks = async (
   });
 };
 
-// 월별 조회
-export const fetchTasksForMonth = async (
-  startOfCurrentMonth: Date,
-  endOfCurrentMonth: Date
-): Promise<Task[]> => {
+// 월별 task 조회
+export const fetchTasksForMonth = async ({
+  startDate,
+  endDate,
+}: FetchTasksForMonthParams): Promise<Task[]> => {
   return await prisma.todo.findMany({
     where: {
       scheduledAt: {
-        gte: startOfCurrentMonth,
-        lte: endOfCurrentMonth,
+        gte: startDate,
+        lte: endDate,
       },
     },
     orderBy: {
@@ -45,10 +51,6 @@ export const fetchTasksForMonth = async (
   });
 };
 
-interface CreateParams {
-  title: string;
-  selectedDate: string;
-}
 export const createTask = async ({ title, selectedDate }: CreateParams) => {
   const scheduledAt = new Date(selectedDate);
   const now = new Date();
@@ -63,12 +65,6 @@ export const createTask = async ({ title, selectedDate }: CreateParams) => {
     data: { title, isDone: false, scheduledAt },
   });
 };
-
-interface UpdateParams {
-  id: number;
-  title?: string;
-  isDone?: boolean;
-}
 
 export const updateTask = async ({ id, title, isDone }: UpdateParams) => {
   return await prisma.todo.update({
