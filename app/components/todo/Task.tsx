@@ -14,10 +14,16 @@ const Task = ({ task }: TaskProps) => {
 
   const queryClient = useQueryClient();
   const deleteTaskMutation = useMutation(deleteTask, {
-    onSuccess: () => queryClient.invalidateQueries('tasks'), // 'tasks' 쿼리의 데이터를 무효화
+    onSuccess: () => {
+      queryClient.invalidateQueries('tasks'); // 'tasks' 쿼리의 데이터를 무효화
+      queryClient.invalidateQueries('tasksForMonth');
+    },
   });
   const updateTaskMutation = useMutation(updateTask, {
-    onSuccess: () => queryClient.invalidateQueries('tasks'),
+    onSuccess: () => {
+      queryClient.invalidateQueries('tasks');
+      queryClient.invalidateQueries('tasksForMonth');
+    },
   });
 
   const onToggleCheck = (isDone: boolean) => {

@@ -1,7 +1,7 @@
 import { fetchTasksForMonth } from '@/app/actions';
 import useCalendar from '@/hooks/useCalendar';
 import { selectedDateAtom } from '@/store/calendarAtom';
-import { useSetAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import { useCallback, useEffect } from 'react';
 import { useQuery } from 'react-query';
 
@@ -17,9 +17,7 @@ const Calendar = () => {
     setCurentMonthTasks,
   } = useCalendar();
 
-  // const tasks = useAtomValue(tasksAtom);
-
-  const setSelectedDate = useSetAtom(selectedDateAtom);
+  const [selectedDate, setSelectedDate] = useAtom(selectedDateAtom);
 
   const handleSelectDate = useCallback(
     (date: Date) => {
@@ -44,8 +42,18 @@ const Calendar = () => {
     }
   );
 
+  const checkIsCurrentMonth = (date: Date) => {
+    return currentMonth === date.getMonth() + 1;
+  };
+
+  const checkIsCurrentDate = (date: Date) => {
+    return (
+      `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}` ===
+      selectedDate
+    );
+  };
   return (
-    <div className='w-full max-w-2xl'>
+    <div className='w-full max-w-2xl p-6 rounded md:shadow-lg'>
       <div className='flex justify-center gap-5 mb-2'>
         <button
           className='w-5 font-bold text-gray-600 transition-opacity opacity-30 hover:opacity-100'
@@ -76,21 +84,34 @@ const Calendar = () => {
       <div className='grid grid-cols-7 border-t border-l'>
         {calendarDates.map((week, i) =>
           week.map(({ date, tasks }) => (
-            <div key={`${i}-${date}`}>
+            <div
+              key={`${i}-${date}`}
+              className={`cursor-pointer ${
+                checkIsCurrentDate(date) && 'bg-gray-100'
+              }`}
+            >
               <div
-                className={`h-20 border-r border-b py-2 px-3 hover:bg-gray-100`}
+                className={`h-16 md:h-20 border-r border-b py-2 hover:bg-gray-100 overflow-y-auto`}
                 onClick={() => handleSelectDate(date)}
               >
-                <div>{date.getDate()}</div>
-                {tasks?.map((task) => (
-                  <div
-                    className='text-xs overflow-hidden whitespace-nowrap text-ellipsis'
-                    key={task.id}
-                    title={task.title}
-                  >
-                    {task.title}
-                  </div>
-                ))}
+                <div
+                  className={`px-2 ${
+                    !checkIsCurrentMonth(date) && 'text-gray-400'
+                  }`}
+                >
+                  {date.getDate()}
+                </div>
+                <div className='flex flex-col gap-[2px] px-1'>
+                  {tasks?.map((task) => (
+                    <div
+                      className='px-[4px] text-[10px] overflow-hidden whitespace-nowrap text-ellipsis bg-orange-300 rounded'
+                      key={task.id}
+                      title={task.title}
+                    >
+                      {task.title}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           ))

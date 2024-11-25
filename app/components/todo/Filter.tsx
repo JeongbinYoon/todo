@@ -1,6 +1,7 @@
 'use client';
 
 import { filterAtom } from '@/store/taskAtom';
+import { FilterVal } from '@/types';
 import { useSetAtom } from 'jotai';
 
 const Filter = () => {
@@ -10,7 +11,7 @@ const Filter = () => {
       className='ml-auto h-8 text-lg'
       name='taskStatus'
       id='taskStatus'
-      onChange={(e) => setFilterVal(e.target.value)}
+      onChange={(e) => setFilterVal(e.target.value as FilterVal)}
     >
       <option value='all'>All</option>
       <option value='active'>Active</option>
