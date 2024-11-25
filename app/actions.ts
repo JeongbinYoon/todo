@@ -90,6 +90,15 @@ export const deleteTask = async (id: number) => {
   });
 };
 
-export const deleteAllTasks = async () => {
-  return await prisma.todo.deleteMany();
+export const deleteAllTasks = async (selectedDate?: string) => {
+  if (!selectedDate) return;
+
+  return await prisma.todo.deleteMany({
+    where: {
+      scheduledAt: {
+        gte: startOfDay(new Date(selectedDate)),
+        lte: endOfDay(new Date(selectedDate)),
+      },
+    },
+  });
 };
