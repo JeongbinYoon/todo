@@ -1,3 +1,4 @@
+import { Task } from '@/types';
 import {
   addDays,
   eachDayOfInterval,
@@ -8,6 +9,7 @@ import {
   startOfWeek,
   addMonths,
   getMonth,
+  getYear,
 } from 'date-fns';
 import { useState, useEffect, useCallback } from 'react';
 
@@ -16,7 +18,9 @@ const useCalendar = () => {
   const today = new Date();
 
   const [currentDate, setCurrentDate] = useState(today);
+  const [currentMonthTasks, setCurentMonthTasks] = useState<Task[]>([]);
   const currentMonth = getMonth(currentDate) + 1;
+  const currentYear = getYear(currentDate);
 
   // 요일 계산
   const weekStartDate = startOfWeek(today);
@@ -33,22 +37,40 @@ const useCalendar = () => {
     return result;
   };
 
-  // 인자로 받은 날짜 기준 해당 월 날짜 범위 계산 함수
-  const calculateCalendarDates = useCallback((date: Date) => {
-    const startDateOfMonth = startOfMonth(date);
-    const endDateOfMonth = endOfMonth(startDateOfMonth);
+  // 선택 월 날짜 범위 계산 함수(이전, 다음 달 날짜 포함)
+  const calculateCalendarDates = useCallback(
+    (tasks?: Task[]) => {
+      const startDate = startOfWeek(startOfMonth(currentDate));
+      const endDate = endOfWeek(endOfMonth(currentDate));
 
-    const days = eachDayOfInterval({
-      start: startOfWeek(startDateOfMonth),
-      end: endOfWeek(endDateOfMonth),
-    });
+      const days = eachDayOfInterval({
+        start: startDate,
+        end: endDate,
+      });
 
-    return chunkArray(days, TOTAL_WEEK_DAYS);
-  }, []);
+      const daysWithTasks = days.map((date) => {
+        const filterTasks = tasks?.filter(
+          (task) =>
+            task.scheduledAt.getMonth() === date.getMonth() &&
+            task.scheduledAt.getDate() === date.getDate()
+        );
+        return {
+          date,
+          tasks: filterTasks,
+        };
+      });
+      return {
+        startDate,
+        endDate,
+        calendar: chunkArray(daysWithTasks, TOTAL_WEEK_DAYS),
+      };
+    },
+    [currentDate]
+  );
 
   // 달력 날짜 상태
-  const [calendarDates, setCalendarDates] = useState(
-    calculateCalendarDates(currentDate)
+  const [calendarData, setCalendarData] = useState(
+    calculateCalendarDates(currentMonthTasks)
   );
 
   // 달력을 업데이트하는 함수
@@ -59,14 +81,18 @@ const useCalendar = () => {
 
   // currentDate 변경 시 calendarDates 동기화
   useEffect(() => {
-    setCalendarDates(calculateCalendarDates(currentDate));
-  }, [currentDate, calculateCalendarDates]);
+    setCalendarData(calculateCalendarDates(currentMonthTasks));
+  }, [currentDate, calculateCalendarDates, currentMonthTasks]);
 
   return {
+    startDate: calendarData.startDate,
+    endDate: calendarData.endDate,
     daysOfWeek,
-    calendarDates,
+    calendarDates: calendarData.calendar,
+    currentYear,
     currentMonth,
     setCurrentMonth,
+    setCurentMonthTasks,
   };
 };
 

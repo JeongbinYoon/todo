@@ -27,6 +27,24 @@ export const fetchTasks = async (
   });
 };
 
+// 월별 조회
+export const fetchTasksForMonth = async (
+  startOfCurrentMonth: Date,
+  endOfCurrentMonth: Date
+): Promise<Task[]> => {
+  return await prisma.todo.findMany({
+    where: {
+      scheduledAt: {
+        gte: startOfCurrentMonth,
+        lte: endOfCurrentMonth,
+      },
+    },
+    orderBy: {
+      scheduledAt: 'asc',
+    },
+  });
+};
+
 interface CreateParams {
   title: string;
   selectedDate: string;

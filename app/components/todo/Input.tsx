@@ -21,6 +21,7 @@ const Input = () => {
        * 캐시된 데이터 무효화하여 해당 데이터 새로고침 (주로 데이터 변경되었을 때 사용)
        */
       queryClient.invalidateQueries('tasks');
+      queryClient.invalidateQueries('tasksForMonth');
     },
   });
 
