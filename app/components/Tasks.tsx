@@ -3,15 +3,16 @@
 import { selectedDateAtom } from '@/store/calendarAtom';
 import Task from './Task';
 import { fetchTasks } from '@/app/actions';
-import { filterAtom } from '@/store/taskAtom';
-import { useAtomValue } from 'jotai';
+import { filterAtom, tasksAtom } from '@/store/taskAtom';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useQuery } from 'react-query';
 
 const Tasks = () => {
   const filterVal = useAtomValue(filterAtom);
   const selectedDate = useAtomValue(selectedDateAtom);
+  const setTasks = useSetAtom(tasksAtom);
   const {
-    data: tasks,
+    data: tasks = [],
     error,
     isLoading,
   } = useQuery(
@@ -19,6 +20,9 @@ const Tasks = () => {
     () => fetchTasks(filterVal, selectedDate),
     {
       enabled: !!filterVal && !!selectedDate,
+      onSuccess: () => {
+        setTasks(tasks);
+      },
     }
   );
 

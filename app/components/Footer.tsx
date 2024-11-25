@@ -1,11 +1,9 @@
 'use client';
 
-import { deleteAllTasks, fetchTasks } from '@/app/actions';
-import { Task } from '@/types';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { deleteAllTasks } from '@/app/actions';
+import { useMutation, useQueryClient } from 'react-query';
 
 const Footer = () => {
-  const { data: tasks = [] } = useQuery<Task[]>('tasks', () => fetchTasks());
   const queryClient = useQueryClient();
   const deleteMutation = useMutation(deleteAllTasks, {
     onSuccess: () => queryClient.invalidateQueries('tasks'),
@@ -15,7 +13,6 @@ const Footer = () => {
   };
   return (
     <div className='flex flex-col gap-2 mt-5'>
-      <span>{tasks.filter((task) => !task.isDone).length} tasks remaining</span>
       <button
         className='w-fit ml-auto mr-auto text-red-800'
         onClick={handleDeleteAll}

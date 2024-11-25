@@ -4,10 +4,13 @@ import { useEffect, useState } from 'react';
 import { IoIosAddCircle } from 'react-icons/io';
 import { createTask } from '@/app/actions';
 import { useMutation, useQueryClient } from 'react-query';
+import { useAtomValue } from 'jotai';
+import { selectedDateAtom } from '@/store/calendarAtom';
 
 const Input = () => {
   const [title, setTitle] = useState('');
   const [error, setError] = useState('');
+  const selectedDate = useAtomValue(selectedDateAtom);
 
   // App.tsx에서 Provider로 설정했으니 또 인스턴스 만들지 않음
   const queryClient = useQueryClient();
@@ -28,7 +31,7 @@ const Input = () => {
       return;
     }
 
-    mutation.mutate(title);
+    mutation.mutate({ title, selectedDate });
     setTitle('');
   };
 

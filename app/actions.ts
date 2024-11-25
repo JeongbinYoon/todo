@@ -27,9 +27,22 @@ export const fetchTasks = async (
   });
 };
 
-export const createTask = async (title: string) => {
+interface CreateParams {
+  title: string;
+  selectedDate: string;
+}
+export const createTask = async ({ title, selectedDate }: CreateParams) => {
+  const scheduledAt = new Date(selectedDate);
+  const now = new Date();
+  scheduledAt.setHours(
+    now.getHours(),
+    now.getMinutes(),
+    now.getSeconds(),
+    now.getMilliseconds()
+  );
+
   return await prisma.todo.create({
-    data: { title, isDone: false },
+    data: { title, isDone: false, scheduledAt },
   });
 };
 
