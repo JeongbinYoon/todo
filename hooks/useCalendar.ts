@@ -41,7 +41,7 @@ const useCalendar = () => {
     const days = eachDayOfInterval({
       start: startOfWeek(startDateOfMonth),
       end: endOfWeek(endDateOfMonth),
-    }).map((day) => day.getDate());
+    });
 
     return chunkArray(days, TOTAL_WEEK_DAYS);
   }, []);

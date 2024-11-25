@@ -1,8 +1,24 @@
 import useCalendar from '@/hooks/useCalendar';
+import { selectedDateAtom } from '@/store/calendarAtom';
+import { useSetAtom } from 'jotai';
+import { useCallback, useEffect } from 'react';
 
 const Calendar = () => {
   const { daysOfWeek, calendarDates, currentMonth, setCurrentMonth } =
     useCalendar();
+  const setSelectedDate = useSetAtom(selectedDateAtom);
+
+  const handleSelectDate = useCallback(
+    (date: Date) => {
+      setSelectedDate(
+        `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+      );
+    },
+    [setSelectedDate]
+  );
+
+  useEffect(() => handleSelectDate(new Date()), [handleSelectDate]);
+
   return (
     <div className='w-full max-w-2xl'>
       <div className='flex justify-center gap-5 mb-2'>
@@ -36,8 +52,9 @@ const Calendar = () => {
             <div
               className={`h-20 border-r border-b py-2 px-3 hover:bg-gray-100`}
               key={`${i}-${date}`}
+              onClick={() => handleSelectDate(date)}
             >
-              {date}
+              {date.getDate()}
             </div>
           ))
         )}

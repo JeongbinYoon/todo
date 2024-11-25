@@ -2,12 +2,25 @@
 
 import { Task } from '@/types';
 import { PrismaClient } from '@prisma/client';
+import { endOfDay, startOfDay } from 'date-fns';
 
 const prisma = new PrismaClient();
 
-export const fetchTasks = async (filterVal?: string): Promise<Task[]> => {
+export const fetchTasks = async (
+  filterVal?: string,
+  selectedDate?: string
+): Promise<Task[]> => {
   return await prisma.todo.findMany({
-    where: filterVal === 'all' ? {} : { isDone: filterVal === 'complete' },
+    where: {
+      ...(filterVal === 'all' ? {} : { isDone: filterVal === 'complete' }), // filterVal에 따른 필터링
+      ...(selectedDate && {
+        // selectedDate에 해당하는 날의 todo 필터링
+        scheduledAt: {
+          gte: startOfDay(new Date(selectedDate)),
+          lte: endOfDay(new Date(selectedDate)),
+        },
+      }),
+    },
     orderBy: {
       id: 'desc',
     },

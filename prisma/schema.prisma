@@ -10,5 +10,6 @@ datasource db {
 model Todo {
   id        Int      @id @default(autoincrement())
   title     String
-  isDone Boolean  @default(false)
+  isDone    Boolean  @default(false)
+  scheduledAt DateTime @default(now())
 }
