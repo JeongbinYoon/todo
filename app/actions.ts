@@ -9,8 +9,10 @@ import {
 } from '@/types';
 import { PrismaClient } from '@prisma/client';
 import { endOfDay, startOfDay } from 'date-fns';
+import { toZonedTime } from 'date-fns-tz';
 
 const prisma = new PrismaClient();
+const TIMEZONE = 'Asia/Seoul';
 
 export const fetchTasks = async ({
   filterVal,
@@ -22,8 +24,8 @@ export const fetchTasks = async ({
       ...(selectedDate && {
         // selectedDate에 해당하는 날의 todo 필터링
         scheduledAt: {
-          gte: startOfDay(new Date(selectedDate)),
-          lte: endOfDay(new Date(selectedDate)),
+          gte: toZonedTime(startOfDay(new Date(selectedDate)), TIMEZONE),
+          lte: toZonedTime(endOfDay(new Date(selectedDate)), TIMEZONE),
         },
       }),
     },

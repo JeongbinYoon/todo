@@ -33,7 +33,9 @@ const Tasks = () => {
           ))}
         </ul>
       ) : (
-        <p className='py-4 text-center text-gray-400'>Theres nothing to show</p>
+        <p className='py-4 text-center text-gray-400'>
+          There&apos;s nothing to show
+        </p>
       )}
     </>
   );
