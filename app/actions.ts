@@ -9,7 +9,7 @@ import {
 } from '@/types';
 import { PrismaClient } from '@prisma/client';
 import { endOfDay, startOfDay } from 'date-fns';
-import { toDate } from 'date-fns-tz';
+import { toZonedTime } from 'date-fns-tz';
 
 const prisma = new PrismaClient();
 const TIMEZONE = 'Asia/Seoul';
@@ -24,10 +24,8 @@ export const fetchTasks = async ({
       ...(selectedDate && {
         // selectedDate에 해당하는 날의 todo 필터링
         scheduledAt: {
-          gte: toDate(startOfDay(new Date(selectedDate)), {
-            timeZone: TIMEZONE,
-          }),
-          lte: toDate(endOfDay(new Date(selectedDate)), { timeZone: TIMEZONE }),
+          gte: toZonedTime(startOfDay(new Date(selectedDate)), TIMEZONE),
+          lte: toZonedTime(endOfDay(new Date(selectedDate)), TIMEZONE),
         },
       }),
     },
@@ -45,8 +43,8 @@ export const fetchTasksForMonth = async ({
   return await prisma.todo.findMany({
     where: {
       scheduledAt: {
-        gte: toDate(startDate, { timeZone: TIMEZONE }),
-        lte: toDate(endDate, { timeZone: TIMEZONE }),
+        gte: toZonedTime(startDate, TIMEZONE),
+        lte: toZonedTime(endDate, TIMEZONE),
       },
     },
     orderBy: {
@@ -56,8 +54,8 @@ export const fetchTasksForMonth = async ({
 };
 
 export const createTask = async ({ title, selectedDate }: CreateParams) => {
-  const scheduledAt = toDate(new Date(selectedDate), { timeZone: TIMEZONE });
-  const now = toDate(new Date(), { timeZone: TIMEZONE });
+  const scheduledAt = toZonedTime(new Date(selectedDate), TIMEZONE);
+  const now = toZonedTime(new Date(), TIMEZONE);
   scheduledAt.setHours(
     now.getHours(),
     now.getMinutes(),
@@ -96,8 +94,8 @@ export const deleteAllTasks = async (selectedDate?: string) => {
   return await prisma.todo.deleteMany({
     where: {
       scheduledAt: {
-        gte: toDate(startOfDay(new Date(selectedDate)), { timeZone: TIMEZONE }),
-        lte: toDate(endOfDay(new Date(selectedDate)), { timeZone: TIMEZONE }),
+        gte: toZonedTime(startOfDay(new Date(selectedDate)), TIMEZONE),
+        lte: toZonedTime(endOfDay(new Date(selectedDate)), TIMEZONE),
       },
     },
   });
