@@ -50,7 +50,7 @@ export const fetchTasksForMonth = async ({
       },
     },
     orderBy: {
-      scheduledAt: 'asc',
+      scheduledAt: 'desc',
     },
   });
 };

@@ -27,7 +27,7 @@ const Tasks = () => {
   return (
     <>
       {tasks.length ? (
-        <ul className='max-h-96 overflow-scroll'>
+        <ul className='max-h-96 overflow-y-auto'>
           {tasks.map((task) => (
             <Task key={task.id} task={task} />
           ))}
