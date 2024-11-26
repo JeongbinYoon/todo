@@ -15,7 +15,7 @@ React 복습하기
 ## 🛠️ 개발 히스토리
 
 <details open>
-<summary><b>4차 캘린더 추가로 월간 플래너 제작</b></summary>
+<summary><b>4차 (캘린더 추가로 월간 플래너 제작)</b></summary>
 
 #### 작업사항
 
@@ -24,6 +24,9 @@ React 복습하기
 - 월간 task 조회 후 날짜 별로 추가
 - 선택한 날짜 task 조회
 - 전체 삭제는 선택한 날짜에 한하여 적용
+- useCalendar 훅을 통해 생성한 날짜 데이터 구성은 다음 같이 중첩 배열로 구성하였다 (2024.06월 기준 6개의 주)
+<img width="600" alt="스크린샷 2024-11-27 오전 12 00 22" src="https://github.com/user-attachments/assets/20207445-039e-48e2-8989-ec6592fb2a1f">
+
 
 #### 회고
 
