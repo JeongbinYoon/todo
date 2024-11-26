@@ -1,9 +1,9 @@
 'use client';
 
+import { useMutation, useQueryClient } from 'react-query';
+import { useAtomValue } from 'jotai';
 import { deleteAllTasks } from '@/app/actions';
 import { selectedDateAtom } from '@/store/calendarAtom';
-import { useAtomValue } from 'jotai';
-import { useMutation, useQueryClient } from 'react-query';
 
 const Footer = () => {
   const queryClient = useQueryClient();

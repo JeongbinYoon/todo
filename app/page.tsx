@@ -1,9 +1,9 @@
 'use client';
 
-import Calendar from '@/app/components/calendar/Calendar';
-import TodoList from '@/app/components/todo/TodoList';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Ephesis } from 'next/font/google';
+import Calendar from '@/app/components/calendar/Calendar';
+import { TodoList } from '@/app/components/todo';
 
 const ephesis = Ephesis({ subsets: ['latin'], weight: ['400'] });
 

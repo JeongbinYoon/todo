@@ -1,8 +1,8 @@
 'use client';
 
+import { useSetAtom } from 'jotai';
 import { filterAtom } from '@/store/taskAtom';
 import { FilterVal } from '@/types';
-import { useSetAtom } from 'jotai';
 
 const Filter = () => {
   const setFilterVal = useSetAtom(filterAtom);

@@ -1,11 +1,11 @@
 'use client';
 
-import { selectedDateAtom } from '@/store/calendarAtom';
-import Task from './Task';
-import { fetchTasks } from '@/app/actions';
-import { filterAtom } from '@/store/taskAtom';
-import { useAtomValue } from 'jotai';
 import { useQuery } from 'react-query';
+import { useAtomValue } from 'jotai';
+import { Task } from '@/app/components/todo';
+import { fetchTasks } from '@/app/actions';
+import { selectedDateAtom } from '@/store/calendarAtom';
+import { filterAtom } from '@/store/taskAtom';
 
 const Tasks = () => {
   const filterVal = useAtomValue(filterAtom);

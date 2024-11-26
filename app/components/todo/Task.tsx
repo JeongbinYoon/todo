@@ -1,9 +1,9 @@
 'use client';
+import { useMutation, useQueryClient } from 'react-query';
 import { CiCircleMinus } from 'react-icons/ci';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { TaskProps } from '@/types';
-import { useMutation, useQueryClient } from 'react-query';
 import { deleteTask, updateTask } from '@/app/actions';
+import { TaskProps } from '@/types';
 
 const Task = ({ task }: TaskProps) => {
   const [isEdit, setIsEdit] = useState(false);
