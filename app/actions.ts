@@ -45,8 +45,8 @@ export const fetchTasksForMonth = async ({
   return await prisma.todo.findMany({
     where: {
       scheduledAt: {
-        gte: startDate,
-        lte: endDate,
+        gte: toDate(startDate, { timeZone: TIMEZONE }),
+        lte: toDate(endDate, { timeZone: TIMEZONE }),
       },
     },
     orderBy: {
@@ -56,8 +56,8 @@ export const fetchTasksForMonth = async ({
 };
 
 export const createTask = async ({ title, selectedDate }: CreateParams) => {
-  const scheduledAt = new Date(selectedDate);
-  const now = new Date();
+  const scheduledAt = toDate(new Date(selectedDate), { timeZone: TIMEZONE });
+  const now = toDate(new Date(), { timeZone: TIMEZONE });
   scheduledAt.setHours(
     now.getHours(),
     now.getMinutes(),
@@ -96,8 +96,8 @@ export const deleteAllTasks = async (selectedDate?: string) => {
   return await prisma.todo.deleteMany({
     where: {
       scheduledAt: {
-        gte: startOfDay(new Date(selectedDate)),
-        lte: endOfDay(new Date(selectedDate)),
+        gte: toDate(startOfDay(new Date(selectedDate)), { timeZone: TIMEZONE }),
+        lte: toDate(endOfDay(new Date(selectedDate)), { timeZone: TIMEZONE }),
       },
     },
   });
